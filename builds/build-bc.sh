@@ -1,0 +1,78 @@
+#!/bin/bash
+# ======================================================
+#  Script Name: build-bc.sh
+#  Author: Benevant Mathew
+#  Created: 2025-12-20
+#  LFS: 12.4
+#  Purpose: Build bc for LFS
+# ======================================================
+# configure
+PHASE=04-system
+PKG=bc
+
+# ======================================================
+# Logging
+# added only where tests exist
+LOG_ROOT=/logs
+LOG_DIR="$LOG_ROOT/$PHASE"
+LOG_FILE="$LOG_DIR/$PKG.check.log"
+
+mkdir -p "$LOG_DIR"
+
+# ======================================================
+# stamp block
+STAMP_ROOT=/stamps
+STAMP_DIR="$STAMP_ROOT/$PHASE"
+STAMP="$STAMP_DIR/$PKG.done"
+
+
+[ -f "$STAMP" ] && {
+    echo "$PKG already installed — skipping"
+    exit 0
+}
+# ======================================================
+# SAFETY CHECK: Ensure the directory actually exists before proceeding
+if [ ! -d "$SRC" ]; then
+    echo "Error: Source directory $SRC does not exist."
+    exit 1
+fi
+
+[ "$(id -u)" -eq 0 ] || {
+    echo "ERROR: $PKG must be built as root inside chroot" >&2
+    exit 1
+}
+
+
+pushd "$SRC"
+###
+rm -rf bc-7.0.3
+tar -xvf bc-7.0.3.tar.xz
+cd bc-7.0.3
+###
+
+# BUILD
+CC='gcc -std=c99' ./configure --prefix=/usr -G -O3 -r
+make
+
+# ======================================================
+# Tests
+echo "Running $PKG test suite..."
+if make test >"$LOG_FILE" 2>&1; then
+    echo "✅ $PKG tests passed"
+else
+    echo "⚠️  $PKG tests failed — review $LOG_FILE"
+fi
+
+# ======================================================
+
+make install
+
+# add stamp
+mkdir -p "$STAMP_DIR"
+touch "$STAMP"
+
+###
+cd ..
+rm -rf bc-7.0.3
+###
+popd
