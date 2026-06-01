@@ -1,16 +1,12 @@
 # Lets Build Linux from Scratch
 
-## Current LFS Status
+## Fastfetch
 
 ![Fastfetch output on LFS](images/area-2025-12-23_20-51-52.png)
 
 ## Objective
 
-This repo is indented to help users to setup Linux from scratch with minimal efforts.
-
-## Builds
-
-- build1
+This repository is indented to help users to setup Linux from scratch with minimal efforts.
 
 ## Packages in installed order
 
@@ -30,7 +26,7 @@ This repo is indented to help users to setup Linux from scratch with minimal eff
 
 ## Thanks
 
-- Tony [Youtube]
+- [Tony](https://www.youtube.com/@tony-btw)
 - The whole team behind LFS docs.
 
 ## Notes
@@ -42,3 +38,7 @@ This repo is indented to help users to setup Linux from scratch with minimal eff
 
 - 2025-11-29
 - 2025-12-23
+
+## Conclusion
+
+The original scope of this project has been completed, so this repository is now archived.
